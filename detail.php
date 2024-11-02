@@ -3,13 +3,14 @@
     include "dbconnect.php";
 
     $post_id = $_GET['id'];
-    $sql = "SELECT * FROM posts WHERE id = :postID";
+    $sql = "SELECT posts.*,categories.name as category_name,users.name as user_name FROM posts INNER JOIN 
+    categories ON posts.category_id = categories.id INNER JOIN users ON posts.user_id = users.id WHERE posts.id = :postID";
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':postID',$post_id);
     $stmt->execute();
     $post = $stmt->fetch();
 
-    var_dump($post);
+    //var_dump($post);
 ?>
 
         <!-- Page content-->
@@ -23,10 +24,9 @@
                             <!-- Post title-->
                             <h1 class="fw-bolder mb-1"><?= $post['title'] ?></h1>
                             <!-- Post meta content-->
-                            <div class="text-muted fst-italic mb-2">Posted on <?= $post['created_at'] ?> by <?= $post['user_id']?></div>
+                            <div class="text-muted fst-italic mb-2">Posted on <?= date('F d, Y',strtotime($post['created_at'])) ?> by <?= $post['user_name']?></div>
                             <!-- Post categories-->
-                            <a class="badge bg-secondary text-decoration-none link-light" href="#!"><?= $post['category_id']?></a>
-                            <a class="badge bg-secondary text-decoration-none link-light" href="#!">Freebies</a>
+                            <a class="badge bg-secondary text-decoration-none link-light" href="index.php?category_id=<?= $post['category_id'] ?>"><?= $post['category_name']?></a>
                         </header>
                         <!-- Preview image figure-->
                         <figure class="mb-4"><img class="img-fluid rounded" src="<?= $post['image']?>" alt="..." /></figure>
