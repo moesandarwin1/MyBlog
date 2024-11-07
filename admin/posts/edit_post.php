@@ -22,6 +22,7 @@
 
 
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
+            $post_id = $_POST['post_id'];
             $title = $_POST['title'];
             $category_id = $_POST['category_id'];
             $description = $_POST['description'];
@@ -35,6 +36,8 @@
                 $image = 'images/'.$image_array['name'];
                 $tmp_name = $image_array['tmp_name'];
                 move_uploaded_file($tmp_name,$image_dir);
+            }else {
+                $image = $_POST['old_image'];
             }
             
             
@@ -43,7 +46,7 @@
 
             $sql = "UPDATE posts SET title=:title, image=:image, description=:description, category_id=:category_id, user_id=:user_id WHERE id=:id";
             $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':id',$id);
+            $stmt->bindParam(':id',$post_id);
             $stmt->bindParam(':title',$title);
             $stmt->bindParam(':image',$image);
             $stmt->bindParam(':description',$description);
@@ -71,7 +74,7 @@
          Edit Posts</p>
     <div class="my-3">
         <form action="<?php htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST" enctype="multipart/form-data">
-            <input type="text" placeholder="Edit Posts" class="form-control">
+            <input type="hidden" placeholder="Edit Posts" class="form-control" name="post_id" id="" value="<?= $post['id'] ?>">
             <div class="card">
                 <div class="card-body">
                     <div class="m-2">
@@ -104,6 +107,7 @@
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="image-tab-pane" role="tabpanel" aria-labelledby="image-tab" tabindex="0">
                                 <img src="../<?= $post['image'] ?>" alt="" class="w-50 h-50 py-5">
+                                <input type="hidden" name="old_image" value="<?= $post['image'] ?>">
                             </div>
                             <div class="tab-pane fade" id="new_image-tab-pane" role="tabpanel" aria-labelledby="new_image-tab" tabindex="0"><input class="form-control my-5" type="file" id="formFile" name="image"></div>
                         </div>

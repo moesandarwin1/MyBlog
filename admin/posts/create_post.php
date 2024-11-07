@@ -23,7 +23,7 @@
             if(isset($image_array) &&  $image_array['size'] > 0){
                 $dir = '../images/';
                 $image_dir = $dir.$image_array['name'];
-                $image = 'admin/images/'.$image_array['name'];
+                $image = 'images/'.$image_array['name'];
                 $tmp_name = $image_array['tmp_name'];
                 move_uploaded_file($tmp_name,$image_dir);
             }
